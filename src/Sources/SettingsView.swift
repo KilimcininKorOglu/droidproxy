@@ -217,6 +217,7 @@ struct SettingsView: View {
     @ObservedObject var serverManager: ServerManager
     @StateObject private var authManager = AuthManager()
     @State private var launchAtLogin = false
+    @AppStorage(AppPreferences.forceMaxOpus46EffortKey) private var forceMaxOpus46Effort = AppPreferences.defaultForceMaxOpus46Effort
     @State private var authenticatingService: ServiceType? = nil
     @State private var showingAuthResult = false
     @State private var authResultMessage = ""
@@ -271,6 +272,9 @@ struct SettingsView: View {
                         .onChange(of: launchAtLogin) { newValue in
                             toggleLaunchAtLogin(newValue)
                         }
+
+                    Toggle("Force Opus 4.6 max effort", isOn: $forceMaxOpus46Effort)
+                        .help("When off, Opus 4.6 adaptive thinking uses high effort by default.")
 
                     HStack {
                         Text("Auth files")

@@ -57,6 +57,18 @@ class ThinkingProxy {
             adaptiveModels.contains(where: { model.contains($0) })
         }
 
+        static func defaultAdaptiveEffort(for model: String) -> String {
+            if model.contains("opus-4-6") {
+                return AppPreferences.forceMaxOpus46Effort ? "max" : "high"
+            }
+            return "high"
+        }
+
+        static func shouldIncludeInterleavedThinkingBeta(for model: String?) -> Bool {
+            guard let model else { return true }
+            return !model.contains("opus-4-6")
+        }
+
         /// Returns the max output token cap for a given (cleaned) model name.
         static func hardTokenCap(for model: String) -> Int {
             isAdaptiveModel(model) ? extendedHardTokenCap : defaultHardTokenCap
@@ -378,7 +390,7 @@ class ThinkingProxy {
 
                 // For adaptive models, inject output_config.effort
                 if isAdaptiveModel {
-                    let effort = effortLevel ?? (cleanModel.contains("opus-4-6") ? "max" : "high")
+                    let effort = effortLevel ?? Config.defaultAdaptiveEffort(for: cleanModel)
                     result = injectJSONField(in: result, afterKey: "thinking", fieldName: "output_config",
                                              fieldValue: "{\"effort\":\"\(effort)\"}")
                     ThinkingProxy.fileLog("INJECTED effort: \(effort) for model \(cleanModel)")
@@ -604,6 +616,30 @@ class ThinkingProxy {
     private enum BetaHeaders {
         static let interleavedThinking = "interleaved-thinking-2025-05-14"
     }
+
+    private func extractModelName(from jsonString: String) -> String? {
+        guard let jsonData = jsonString.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] else {
+            return nil
+        }
+        return json["model"] as? String
+    }
+
+    private func mergedBetaHeader(existingHeader: String?, shouldAddInterleavedThinking: Bool) -> String? {
+        var values = existingHeader?
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty } ?? []
+
+        values.removeAll { $0 == BetaHeaders.interleavedThinking }
+
+        if shouldAddInterleavedThinking {
+            values.append(BetaHeaders.interleavedThinking)
+        }
+
+        guard !values.isEmpty else { return nil }
+        return values.joined(separator: ",")
+    }
     
     /**
      Forwards the request to CLIProxyAPI on port 8318 (pass-through for non-thinking requests)
@@ -626,6 +662,8 @@ class ThinkingProxy {
                 var forwardedRequest = "\(method) \(path) \(version)\r\n"
                 let excludedHeaders: Set<String> = ["content-length", "host", "transfer-encoding"]
                 var existingBetaHeader: String? = nil
+                let modelName = self.extractModelName(from: body)
+                let shouldIncludeInterleavedThinking = Config.shouldIncludeInterleavedThinkingBeta(for: modelName)
                 
                 for (name, value) in headers {
                     let lowercasedName = name.lowercased()
@@ -639,23 +677,19 @@ class ThinkingProxy {
                     }
                     forwardedRequest += "\(name): \(value)\r\n"
                 }
-                
-                // Add/merge anthropic-beta header when thinking is enabled
-                if thinkingEnabled {
-                    var betaValue = BetaHeaders.interleavedThinking
-                    if let existing = existingBetaHeader {
-                        // Merge with existing header if not already present
-                        if !existing.contains(BetaHeaders.interleavedThinking) {
-                            betaValue = "\(existing),\(BetaHeaders.interleavedThinking)"
-                        } else {
-                            betaValue = existing
-                        }
-                    }
+
+                let betaValue = self.mergedBetaHeader(
+                    existingHeader: existingBetaHeader,
+                    shouldAddInterleavedThinking: thinkingEnabled && shouldIncludeInterleavedThinking
+                )
+
+                if let betaValue {
                     forwardedRequest += "anthropic-beta: \(betaValue)\r\n"
-                    NSLog("[ThinkingProxy] Added interleaved thinking beta header")
-                } else if let existing = existingBetaHeader {
-                    // Pass through existing header when thinking not enabled
-                    forwardedRequest += "anthropic-beta: \(existing)\r\n"
+                    if thinkingEnabled && shouldIncludeInterleavedThinking {
+                        NSLog("[ThinkingProxy] Added interleaved thinking beta header")
+                    }
+                } else if existingBetaHeader != nil && !shouldIncludeInterleavedThinking {
+                    NSLog("[ThinkingProxy] Removed interleaved thinking beta header for Opus 4.6 request")
                 }
                 
                 // Override Host header
