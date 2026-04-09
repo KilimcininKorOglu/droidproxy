@@ -75,6 +75,15 @@ src/
 └── Info.plist
 ```
 
+## Star History
+
+<a href="https://starchart.cc/anand-92/droidproxy">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://starchart.cc/anand-92/droidproxy.svg?theme=dark">
+    <img alt="Star History Chart" src="https://starchart.cc/anand-92/droidproxy.svg">
+  </picture>
+</a>
+
 ## License
 
 MIT
