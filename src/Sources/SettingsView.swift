@@ -1,6 +1,206 @@
 import SwiftUI
 import ServiceManagement
 
+struct HazardStripesView: View {
+    let stripeColor: Color
+    let backgroundColor: Color
+    private let stripeWidth: CGFloat = 6
+    private let gap: CGFloat = 10
+
+    var body: some View {
+        GeometryReader { geo in
+            let totalWidth = geo.size.width + geo.size.height
+            let count = Int(totalWidth / (stripeWidth + gap)) + 2
+            ZStack {
+                backgroundColor
+                HStack(spacing: gap) {
+                    ForEach(0..<count, id: \.self) { _ in
+                        Rectangle()
+                            .fill(stripeColor)
+                            .frame(width: stripeWidth)
+                    }
+                }
+                .frame(width: totalWidth)
+                .rotationEffect(.degrees(-45))
+            }
+        }
+        .clipped()
+    }
+}
+
+struct MaxBudgetToggleView: View {
+    @Binding var isOn: Bool
+    @State private var isPulsing = false
+    @State private var showFlash = false
+    @State private var isPressed = false
+
+    private let dangerRed = Color(red: 0.9, green: 0.15, blue: 0.1)
+    private let hazardOrange = Color(red: 0.95, green: 0.4, blue: 0.1)
+    private let darkRed = Color(red: 0.5, green: 0.05, blue: 0.02)
+    private let buttonSize: CGFloat = 44
+
+    var body: some View {
+        VStack(spacing: 14) {
+            // Button row: label + big red 3D button
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("MAX THINKING BUDGET")
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(isOn ? dangerRed : .gray.opacity(0.6))
+                    Text("Forces maximum budget_tokens on every request")
+                        .font(.system(size: 9))
+                        .foregroundColor(.gray.opacity(0.5))
+                }
+
+                Spacer()
+
+                // The Big Red Button
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isOn.toggle()
+                    }
+                    if isOn {
+                        showFlash = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            withAnimation(.easeOut(duration: 0.15)) {
+                                showFlash = false
+                            }
+                        }
+                        withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+                            isPulsing = true
+                        }
+                    } else {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            isPulsing = false
+                        }
+                    }
+                } label: {
+                    ZStack {
+                        // Base shadow / depth (the "well" the button sits in)
+                        Circle()
+                            .fill(Color.black.opacity(0.6))
+                            .frame(width: buttonSize + 6, height: buttonSize + 6)
+
+                        // Outer ring - metallic bezel
+                        Circle()
+                            .fill(
+                                RadialGradient(
+                                    colors: [Color.gray.opacity(0.4), Color.gray.opacity(0.15), Color.black.opacity(0.3)],
+                                    center: .center,
+                                    startRadius: buttonSize * 0.35,
+                                    endRadius: buttonSize * 0.5
+                                )
+                            )
+                            .frame(width: buttonSize + 4, height: buttonSize + 4)
+
+                        // Main button face - 3D convex gradient
+                        Circle()
+                            .fill(
+                                RadialGradient(
+                                    colors: isOn
+                                        ? [dangerRed, dangerRed.opacity(0.85), darkRed]
+                                        : [Color(white: 0.35), Color(white: 0.22), Color(white: 0.12)],
+                                    center: .init(x: 0.4, y: 0.35),
+                                    startRadius: 0,
+                                    endRadius: buttonSize * 0.5
+                                )
+                            )
+                            .frame(width: buttonSize, height: buttonSize)
+                            .overlay(
+                                // Top highlight for 3D convexity
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [Color.white.opacity(isOn ? 0.25 : 0.15), .clear],
+                                            startPoint: .top,
+                                            endPoint: .center
+                                        )
+                                    )
+                                    .frame(width: buttonSize - 4, height: buttonSize - 4)
+                            )
+
+                        // Power icon on the button
+                        Image(systemName: "power")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(isOn ? Color.white : Color.gray.opacity(0.5))
+
+                        // Ignition flash
+                        if showFlash {
+                            Circle()
+                                .fill(Color.white.opacity(0.6))
+                                .frame(width: buttonSize, height: buttonSize)
+                                .transition(.opacity)
+                        }
+                    }
+                    .scaleEffect(isPressed ? 0.92 : 1.0)
+                }
+                .buttonStyle(.plain)
+                .shadow(color: isOn ? dangerRed.opacity(isPulsing ? 0.7 : 0.25) : .clear, radius: isOn ? 12 : 0)
+                .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: isPulsing)
+                .onHover { inside in
+                    if inside { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+                }
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { _ in
+                            withAnimation(.easeInOut(duration: 0.1)) { isPressed = true }
+                        }
+                        .onEnded { _ in
+                            withAnimation(.easeOut(duration: 0.15)) { isPressed = false }
+                        }
+                )
+            }
+
+            // Status banner (separate, only when active)
+            if isOn {
+                HStack(spacing: 6) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(hazardOrange)
+                        .opacity(isPulsing ? 1.0 : 0.6)
+                    Text("\u{26a1} BURNING THROUGH QUOTA")
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(dangerRed.opacity(0.9))
+                    Spacer()
+                    Text("ACTIVE")
+                        .font(.system(size: 8, weight: .black, design: .monospaced))
+                        .tracking(1.5)
+                        .foregroundColor(dangerRed)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(
+                    ZStack {
+                        HazardStripesView(
+                            stripeColor: dangerRed.opacity(0.15),
+                            backgroundColor: Color.red.opacity(0.05)
+                        )
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.black.opacity(0.3))
+                    }
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 5))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(dangerRed.opacity(0.3), lineWidth: 1)
+                )
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .onAppear {
+            if isOn {
+                withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+                    isPulsing = true
+                }
+            }
+        }
+        .help("Forces manual thinking with maximum budget_tokens instead of adaptive thinking. This will burn through your usage limits quickly.")
+    }
+}
+
+
 /// A single account row with disable toggle and remove button
 struct AccountRowView: View {
     static let accent = Color(red: 0xF2/255, green: 0x7B/255, blue: 0x2F/255)
@@ -229,6 +429,7 @@ struct SettingsView: View {
     @AppStorage(AppPreferences.gemini3FlashThinkingLevelKey) private var gemini3FlashThinkingLevel = AppPreferences.defaultGemini3FlashThinkingLevel
     @AppStorage(AppPreferences.allowRemoteKey) private var allowRemote = AppPreferences.defaultAllowRemote
     @AppStorage(AppPreferences.secretKeyKey) private var secretKey = AppPreferences.defaultSecretKey
+    @AppStorage(AppPreferences.claudeMaxBudgetModeKey) private var claudeMaxBudgetMode = AppPreferences.defaultClaudeMaxBudgetMode
     @State private var authenticatingService: ServiceType? = nil
     @State private var showingAuthResult = false
     @State private var authResultMessage = ""
@@ -239,6 +440,7 @@ struct SettingsView: View {
     @State private var factoryModelsInstalled = false
     @State private var challengerPluginInstalled = false
     @State private var remoteManagementExpanded = false
+    @State private var showingMaxBudgetWarning = false
     @State private var claudeModelsExpanded = true
     @State private var codexModelsExpanded = true
     @State private var geminiModelsExpanded = true
@@ -448,18 +650,30 @@ struct SettingsView: View {
                                 }
                             }
                             if claudeModelsExpanded {
+                                MaxBudgetToggleView(isOn: $claudeMaxBudgetMode)
+                                    .onChange(of: claudeMaxBudgetMode) { enabled in
+                                        if enabled {
+                                            showingMaxBudgetWarning = true
+                                            opus46ThinkingEffort = "max"
+                                            sonnet46ThinkingEffort = "max"
+                                        }
+                                    }
                                 effortPickerRow(
                                     "Opus 4.6 thinking effort",
                                     selection: $opus46ThinkingEffort,
                                     options: ["low", "medium", "high", "max"],
                                     tint: claudeEffortSelectionColor
                                 )
+                                .disabled(claudeMaxBudgetMode)
+                                .opacity(claudeMaxBudgetMode ? 0.4 : 1.0)
                                 effortPickerRow(
                                     "Sonnet 4.6 thinking effort",
                                     selection: $sonnet46ThinkingEffort,
-                                    options: ["low", "medium", "high"],
+                                    options: ["low", "medium", "high", "max"],
                                     tint: claudeEffortSelectionColor
                                 )
+                                .disabled(claudeMaxBudgetMode)
+                                .opacity(claudeMaxBudgetMode ? 0.4 : 1.0)
                             }
                         }
                         .padding(.leading, 28)
@@ -665,6 +879,11 @@ struct SettingsView: View {
             Button("OK", role: .cancel) { }
         } message: {
             Text(authResultMessage)
+        }
+        .alert("⚠️ MAX BUDGET MODE", isPresented: $showingMaxBudgetWarning) {
+            Button("Engage", role: .cancel) { }
+        } message: {
+            Text("You are about to unlock maximum thinking power. Every request will use the highest possible budget_tokens, burning through your API quota at full speed. There is no throttle.")
         }
     }
 
