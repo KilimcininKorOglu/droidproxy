@@ -30,7 +30,7 @@ src/Sources/Resources/AppIcon.iconset/
 # Logs
 *.log
 test-notarization.sh
-.vscode/settings.json
+.vscode/
 .sparkle_ed25519_private_key
 
 # Website
