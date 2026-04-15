@@ -10,8 +10,7 @@ A native macOS menu bar app that proxies Claude Code and Codex authentication fo
 
 Grab the latest release from [Releases](https://github.com/KilimcininKorOglu/droidproxyplus/releases/latest):
 
-- **DroidProxyPlus-arm64.dmg** -- Apple Silicon
-- **DroidProxyPlus-arm64.zip** -- ZIP alternative
+- **DroidProxyPlus-arm64.zip** -- Apple Silicon (M1/M2/M3/M4)
 
 All releases are code-signed and notarized by Apple. Existing installs auto-update via Sparkle.
 
@@ -21,7 +20,8 @@ All releases are code-signed and notarized by Apple. Existing installs auto-upda
 - **Adaptive thinking proxy** -- Injects `thinking: {"type":"adaptive"}` and per-model `output_config.effort` for Claude Opus 4.6 and Claude Sonnet 4.6 requests sent through `http://localhost:8317`
 - **Codex reasoning controls** -- Injects `reasoning: {"effort":"..."}` for `gpt-5.3-codex` and `gpt-5.4` via the OpenAI-compatible `http://localhost:8317/v1` endpoint
 - **Per-model effort controls** -- Configure Opus 4.6 (`low` / `medium` / `high` / `max`), Sonnet 4.6 (`low` / `medium` / `high`), GPT 5.3 Codex (`low` / `medium` / `high` / `xhigh`), and GPT 5.4 (`low` / `medium` / `high` / `xhigh`) directly from the Settings window
-- **Max Budget Mode** -- Nuclear launch button that forces maximum `budget_tokens` on every Claude request. Engages full thinking power at the cost of burning through your API quota at warp speed. You've been warned.
+- **Custom Model Manager** -- Add, edit, delete, import, and export Factory custom models from a dedicated manager window
+- **Max Budget Mode** -- Forces maximum `budget_tokens` on every Claude request, engaging full thinking power at the cost of burning through your API quota
 
 <p align="center">
   <img src="max-mode.png" alt="Max Budget Mode" width="420">
@@ -34,10 +34,6 @@ All releases are code-signed and notarized by Apple. Existing installs auto-upda
 
 See [SETUP.md](SETUP.md) for authentication and Factory configuration instructions.
 
-<p align="center">
-  <img src="settings-screenshot.png" alt="DroidProxyPlus Settings" width="420">
-</p>
-
 ## Requirements
 
 - macOS 13.0+ (Ventura or later)
@@ -47,7 +43,7 @@ See [SETUP.md](SETUP.md) for authentication and Factory configuration instructio
 
 ```bash
 # Debug build
-make build
+cd src && swift build
 
 # Release build + signed .app bundle
 ./create-app-bundle.sh
@@ -58,23 +54,27 @@ make build
 ```
 src/
 ├── Sources/
-│   ├── main.swift              # App entry point
-│   ├── AppDelegate.swift       # Menu bar & window management
-│   ├── ServerManager.swift     # Server process control & auth
-│   ├── SettingsView.swift      # Main UI
-│   ├── AuthStatus.swift        # Auth file monitoring
-│   ├── ThinkingProxy.swift     # Thinking parameter injection proxy
-│   ├── TunnelManager.swift     # Network tunnel management
-│   ├── IconCatalog.swift       # Icon loading & caching
-│   ├── NotificationNames.swift # Notification constants
+│   ├── main.swift                    # App entry point
+│   ├── AppDelegate.swift             # Menu bar & window management
+│   ├── ServerManager.swift           # Server process control & auth
+│   ├── SettingsView.swift            # Main settings UI
+│   ├── AuthStatus.swift              # Auth file monitoring
+│   ├── ThinkingProxy.swift           # Thinking parameter injection proxy
+│   ├── AppPreferences.swift          # UserDefaults-backed preferences
+│   ├── FactoryConfigManager.swift    # Factory settings.json I/O & CRUD
+│   ├── CustomModelManagerView.swift  # Custom Model Manager window
+│   ├── TunnelManager.swift           # Network tunnel management
+│   ├── IconCatalog.swift             # Icon loading & caching
+│   ├── LogoView.swift                # Factory.ai logo view
+│   ├── NotificationNames.swift       # Notification constants
 │   └── Resources/
-│       ├── cli-proxy-api-plus  # CLIProxyAPIPlus binary
-│       ├── config.yaml         # Server config
-│       ├── AppIcon.icns        # App icon
-│       ├── icon-active.png     # Menu bar icon (active)
-│       ├── icon-inactive.png   # Menu bar icon (inactive)
-│       ├── icon-claude.png     # Claude service icon
-│       └── icon-codex.png      # Codex service icon
+│       ├── cli-proxy-api-plus        # CLIProxyAPIPlus binary
+│       ├── config.yaml               # Server config
+│       ├── AppIcon.icns              # App icon
+│       ├── icon-active.png           # Menu bar icon (active)
+│       ├── icon-inactive.png         # Menu bar icon (inactive)
+│       ├── icon-claude.png           # Claude service icon
+│       └── icon-codex.png            # Codex service icon
 ├── Package.swift
 └── Info.plist
 ```
