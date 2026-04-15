@@ -209,6 +209,68 @@ class FactoryConfigManager: ObservableObject {
         entry.id.hasPrefix("custom:droidproxyplus:") || entry.id.hasPrefix("custom:CC:")
     }
 
+    // MARK: - Import / Export
+
+    enum ImportMode {
+        case replace
+        case merge
+    }
+
+    func exportModels(to url: URL) throws {
+        var dicts: [[String: Any]] = []
+        for (offset, entry) in customModels.enumerated() {
+            var dict = entry.toDictionary()
+            dict["index"] = offset
+            dicts.append(dict)
+        }
+
+        var data = try JSONSerialization.data(withJSONObject: dicts, options: [.prettyPrinted, .sortedKeys])
+        if var jsonString = String(data: data, encoding: .utf8) {
+            jsonString = jsonString.replacingOccurrences(of: "\\/", with: "/")
+            data = jsonString.data(using: .utf8) ?? data
+        }
+        try data.write(to: url, options: .atomic)
+        NSLog("[FactoryConfigManager] Exported %d models to %@", dicts.count, url.path)
+    }
+
+    func importModels(from url: URL, mode: ImportMode) throws -> Int {
+        let data = try Data(contentsOf: url)
+        let parsed = try JSONSerialization.jsonObject(with: data)
+
+        var rawModels: [[String: Any]]
+        if let array = parsed as? [[String: Any]] {
+            rawModels = array
+        } else if let dict = parsed as? [String: Any],
+                  let array = dict["customModels"] as? [[String: Any]] {
+            rawModels = array
+        } else {
+            throw NSError(domain: "FactoryConfigManager", code: 1,
+                          userInfo: [NSLocalizedDescriptionKey: "Invalid format: expected JSON array or object with customModels key"])
+        }
+
+        let entries = rawModels.compactMap { CustomModelEntry(from: $0) }
+        guard !entries.isEmpty else {
+            throw NSError(domain: "FactoryConfigManager", code: 2,
+                          userInfo: [NSLocalizedDescriptionKey: "No valid model entries found in file"])
+        }
+
+        let importedCount: Int
+        switch mode {
+        case .replace:
+            customModels = entries
+            importedCount = entries.count
+        case .merge:
+            let existingIds = Set(customModels.map { $0.id })
+            let newEntries = entries.filter { !existingIds.contains($0.id) }
+            customModels.append(contentsOf: newEntries)
+            importedCount = newEntries.count
+        }
+
+        saveModels()
+        NSLog("[FactoryConfigManager] Imported %d models (%@ mode)", importedCount, mode == .replace ? "replace" : "merge")
+        return importedCount
+    }
+
     // MARK: - File Monitoring
 
     func startMonitoring() {

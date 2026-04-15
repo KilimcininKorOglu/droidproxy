@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct CustomModelManagerView: View {
     @StateObject private var configManager = FactoryConfigManager()
@@ -6,6 +7,10 @@ struct CustomModelManagerView: View {
     @State private var editingModel: CustomModelEntry?
     @State private var modelToDelete: CustomModelEntry?
     @State private var showingDeleteConfirmation = false
+    @State private var showingImportModeAlert = false
+    @State private var pendingImportURL: URL?
+    @State private var importResultMessage: String?
+    @State private var showingImportResult = false
 
     private let oledWindowBackground = Color.black
     private let oledSectionBackground = Color(red: 0x12/255, green: 0x12/255, blue: 0x12/255)
@@ -45,6 +50,24 @@ struct CustomModelManagerView: View {
         } message: { model in
             Text("Remove \"\(model.displayName)\" from Factory custom models?")
         }
+        .alert("Import Models", isPresented: $showingImportModeAlert) {
+            Button("Replace All", role: .destructive) {
+                performImport(mode: .replace)
+            }
+            Button("Merge (skip duplicates)") {
+                performImport(mode: .merge)
+            }
+            Button("Cancel", role: .cancel) {
+                pendingImportURL = nil
+            }
+        } message: {
+            Text("How should imported models be handled?")
+        }
+        .alert("Import Result", isPresented: $showingImportResult) {
+            Button("OK") {}
+        } message: {
+            Text(importResultMessage ?? "")
+        }
     }
 
     // MARK: - Header
@@ -57,6 +80,24 @@ struct CustomModelManagerView: View {
             Text("\(configManager.customModels.count) models")
                 .font(.caption)
                 .foregroundColor(.secondary)
+
+            Button { exportModels() } label: {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 14))
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+            .help("Export models to JSON file")
+            .disabled(configManager.customModels.isEmpty)
+
+            Button { importModels() } label: {
+                Image(systemName: "square.and.arrow.down")
+                    .font(.system(size: 14))
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+            .help("Import models from JSON file")
+
             Button {
                 showingAddSheet = true
             } label: {
@@ -145,6 +186,53 @@ struct CustomModelManagerView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 10)
+    }
+
+    // MARK: - Import / Export
+
+    private func exportModels() {
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.json]
+        panel.nameFieldStringValue = "droidproxyplus-models.json"
+        panel.title = "Export Custom Models"
+
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+
+        do {
+            try configManager.exportModels(to: url)
+            importResultMessage = "Exported \(configManager.customModels.count) models"
+            showingImportResult = true
+        } catch {
+            importResultMessage = "Export failed: \(error.localizedDescription)"
+            showingImportResult = true
+        }
+    }
+
+    private func importModels() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.json]
+        panel.allowsMultipleSelection = false
+        panel.title = "Import Custom Models"
+
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+
+        pendingImportURL = url
+        showingImportModeAlert = true
+    }
+
+    private func performImport(mode: FactoryConfigManager.ImportMode) {
+        guard let url = pendingImportURL else { return }
+        pendingImportURL = nil
+
+        do {
+            let count = try configManager.importModels(from: url, mode: mode)
+            let modeLabel = mode == .replace ? "replaced" : "merged"
+            importResultMessage = "\(count) models imported (\(modeLabel))"
+            showingImportResult = true
+        } catch {
+            importResultMessage = "Import failed: \(error.localizedDescription)"
+            showingImportResult = true
+        }
     }
 }
 
