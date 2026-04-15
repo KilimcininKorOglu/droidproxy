@@ -8,6 +8,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
     var statusItem: NSStatusItem!
     var menu: NSMenu!
     weak var settingsWindow: NSWindow?
+    weak var customModelWindow: NSWindow?
     var serverManager: ServerManager!
     var thinkingProxy: ThinkingProxy!
     private let notificationCenter = UNUserNotificationCenter.current()
@@ -56,6 +57,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
             self,
             selector: #selector(handleAuthDirectoryChanged),
             name: .authDirectoryChanged,
+            object: nil
+        )
+
+        // Custom Model Manager window
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(openCustomModelManager),
+            name: .openCustomModelManager,
             object: nil
         )
     }
@@ -209,9 +218,39 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
         settingsWindow = window
     }
     
+    @objc func openCustomModelManager() {
+        if customModelWindow == nil {
+            createCustomModelWindow()
+        }
+        customModelWindow?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    func createCustomModelWindow() {
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 580, height: 600),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Custom Model Manager"
+        window.center()
+        window.delegate = self
+        window.isReleasedWhenClosed = false
+        window.backgroundColor = .black
+
+        let contentView = CustomModelManagerView()
+        window.contentView = NSHostingView(rootView: contentView)
+
+        customModelWindow = window
+    }
+
     func windowDidClose(_ notification: Notification) {
         if notification.object as? NSWindow === settingsWindow {
             settingsWindow = nil
+        }
+        if notification.object as? NSWindow === customModelWindow {
+            customModelWindow = nil
         }
     }
 

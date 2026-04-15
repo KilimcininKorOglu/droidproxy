@@ -523,6 +523,9 @@ struct SettingsView: View {
                         Button(factoryModelsInstalled ? "Re-apply" : "Apply") {
                             applyFactoryCustomModels()
                         }
+                        Button("Manage") {
+                            NotificationCenter.default.post(name: .openCustomModelManager, object: nil)
+                        }
                     }
 
                     HStack {
