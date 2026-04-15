@@ -186,9 +186,10 @@ class FactoryConfigManager: ObservableObject {
         saveModels()
     }
 
-    func updateModel(_ entry: CustomModelEntry) {
-        guard let idx = customModels.firstIndex(where: { $0.id == entry.id }) else {
-            NSLog("[FactoryConfigManager] Model not found for update: %@", entry.id)
+    func updateModel(_ entry: CustomModelEntry, originalId: String? = nil) {
+        let searchId = originalId ?? entry.id
+        guard let idx = customModels.firstIndex(where: { $0.id == searchId }) else {
+            NSLog("[FactoryConfigManager] Model not found for update: %@", searchId)
             return
         }
         customModels[idx] = entry
@@ -198,6 +199,10 @@ class FactoryConfigManager: ObservableObject {
     func deleteModel(id: String) {
         customModels.removeAll { $0.id == id }
         saveModels()
+    }
+
+    func modelExists(id: String, excluding: String? = nil) -> Bool {
+        customModels.contains { $0.id == id && $0.id != excluding }
     }
 
     func isDroidProxyPlusModel(_ entry: CustomModelEntry) -> Bool {

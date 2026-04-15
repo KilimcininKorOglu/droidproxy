@@ -28,13 +28,13 @@ struct CustomModelManagerView: View {
             configManager.stopMonitoring()
         }
         .sheet(isPresented: $showingAddSheet) {
-            CustomModelFormView(mode: .add) { entry in
+            CustomModelFormView(mode: .add, configManager: configManager) { entry, _ in
                 configManager.addModel(entry)
             }
         }
         .sheet(item: $editingModel) { model in
-            CustomModelFormView(mode: .edit(model)) { entry in
-                configManager.updateModel(entry)
+            CustomModelFormView(mode: .edit(model), configManager: configManager) { entry, originalId in
+                configManager.updateModel(entry, originalId: originalId)
             }
         }
         .alert("Delete Model", isPresented: $showingDeleteConfirmation, presenting: modelToDelete) { model in
@@ -273,13 +273,15 @@ struct CustomModelFormView: View {
     }
 
     let mode: Mode
-    let onSave: (CustomModelEntry) -> Void
+    let configManager: FactoryConfigManager
+    let onSave: (CustomModelEntry, String?) -> Void
 
     @Environment(\.dismiss) private var dismiss
 
     @State private var displayName: String = ""
     @State private var model: String = ""
     @State private var entryId: String = ""
+    @State private var originalId: String = ""
     @State private var provider: String = "anthropic"
     @State private var baseUrl: String = "http://localhost:8317"
     @State private var apiKey: String = "dummy-not-used"
@@ -288,9 +290,28 @@ struct CustomModelFormView: View {
     @State private var extraFields: [String: Any] = [:]
 
     private var isValid: Bool {
-        !model.trimmingCharacters(in: .whitespaces).isEmpty
-            && !displayName.trimmingCharacters(in: .whitespaces).isEmpty
-            && (Int(maxOutputTokens) ?? 0) > 0
+        let trimmedId = entryId.trimmingCharacters(in: .whitespaces)
+        guard !model.trimmingCharacters(in: .whitespaces).isEmpty,
+              !displayName.trimmingCharacters(in: .whitespaces).isEmpty,
+              !trimmedId.isEmpty,
+              (Int(maxOutputTokens) ?? 0) > 0 else {
+            return false
+        }
+        let excludeId: String? = {
+            if case .edit = mode { return originalId }
+            return nil
+        }()
+        return !configManager.modelExists(id: trimmedId, excluding: excludeId)
+    }
+
+    private var isDuplicateId: Bool {
+        let trimmedId = entryId.trimmingCharacters(in: .whitespaces)
+        guard !trimmedId.isEmpty else { return false }
+        let excludeId: String? = {
+            if case .edit = mode { return originalId }
+            return nil
+        }()
+        return configManager.modelExists(id: trimmedId, excluding: excludeId)
     }
 
     private var title: String {
@@ -322,6 +343,11 @@ struct CustomModelFormView: View {
                         }
                     TextField("ID", text: $entryId)
                         .font(.system(.body, design: .monospaced))
+                    if isDuplicateId {
+                        Text("A model with this ID already exists")
+                            .font(.caption)
+                            .foregroundColor(.red)
+                    }
                 }
 
                 Section {
@@ -380,6 +406,7 @@ struct CustomModelFormView: View {
             displayName = entry.displayName
             model = entry.model
             entryId = entry.id
+            originalId = entry.id
             provider = entry.provider
             baseUrl = entry.baseUrl
             apiKey = entry.apiKey
@@ -390,7 +417,7 @@ struct CustomModelFormView: View {
     }
 
     private func save() {
-        let entry = CustomModelEntry(
+        var entry = CustomModelEntry(
             id: entryId.trimmingCharacters(in: .whitespaces),
             model: model.trimmingCharacters(in: .whitespaces),
             index: 0,
@@ -401,7 +428,9 @@ struct CustomModelFormView: View {
             noImageSupport: noImageSupport,
             provider: provider
         )
-        onSave(entry)
+        entry.extraFields = extraFields
+        let origId: String? = originalId.isEmpty ? nil : originalId
+        onSave(entry, origId)
         dismiss()
     }
 }
