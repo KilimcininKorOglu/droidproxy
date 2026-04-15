@@ -103,7 +103,7 @@ struct CustomModelManagerView: View {
                     ForEach(configManager.customModels) { model in
                         CustomModelRowView(
                             model: model,
-                            isDroidProxy: configManager.isDroidProxyModel(model),
+                            isDroidProxyPlus: configManager.isDroidProxyPlusModel(model),
                             onEdit: { editingModel = model },
                             onDelete: {
                                 modelToDelete = model
@@ -152,7 +152,7 @@ struct CustomModelManagerView: View {
 
 struct CustomModelRowView: View {
     let model: CustomModelEntry
-    let isDroidProxy: Bool
+    let isDroidProxyPlus: Bool
     let onEdit: () -> Void
     let onDelete: () -> Void
 
@@ -183,7 +183,7 @@ struct CustomModelRowView: View {
                         .font(.system(size: 13, weight: .semibold))
                         .lineLimit(1)
 
-                    if isDroidProxy {
+                    if isDroidProxyPlus {
                         Text("DROID")
                             .font(.system(size: 8, weight: .bold, design: .monospaced))
                             .padding(.horizontal, 5)

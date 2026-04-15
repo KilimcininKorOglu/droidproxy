@@ -12,8 +12,8 @@ NC='\033[0m'
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$PROJECT_DIR/src"
-APP_NAME="DroidProxy"
-BUNDLE_ID="com.droidproxy.app"
+APP_NAME="DroidProxyPlus"
+BUNDLE_ID="com.droidproxyplus.app"
 BUILD_DIR="$SRC_DIR/.build/release"
 APP_DIR="$PROJECT_DIR/$APP_NAME.app"
 
@@ -112,14 +112,6 @@ echo -e "${BLUE}Setting version to: ${VERSION} (build ${BUILD_NUMBER})${NC}"
 # Update Info.plist with version
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${VERSION}" "$APP_DIR/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${BUILD_NUMBER}" "$APP_DIR/Contents/Info.plist"
-
-# Update SUFeedURL based on architecture (for Sparkle auto-updates)
-TARGET_ARCH="${TARGET_ARCH:-arm64}"
-if [ "$TARGET_ARCH" = "x86_64" ]; then
-    APPCAST_URL="https://raw.githubusercontent.com/anand-92/droidproxy/main/appcast-x86_64.xml"
-    echo -e "${BLUE}Setting Sparkle feed URL for Intel: ${APPCAST_URL}${NC}"
-    /usr/libexec/PlistBuddy -c "Set :SUFeedURL ${APPCAST_URL}" "$APP_DIR/Contents/Info.plist"
-fi
 
 # Create PkgInfo
 echo -e "${BLUE}Creating PkgInfo...${NC}"

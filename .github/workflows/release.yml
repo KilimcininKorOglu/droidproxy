@@ -120,16 +120,16 @@ jobs:
 
       - name: Verify code signature
         run: |
-          codesign --verify --deep --strict --verbose=2 DroidProxy.app
-          spctl -a -vvv -t install DroidProxy.app || echo "::warning::Gatekeeper check failed (expected before notarization)"
+          codesign --verify --deep --strict --verbose=2 DroidProxyPlus.app
+          spctl -a -vvv -t install DroidProxyPlus.app || echo "::warning::Gatekeeper check failed (expected before notarization)"
 
       - name: Notarize
         run: |
           set -euo pipefail
 
-          ditto -c -k --sequesterRsrc --keepParent "DroidProxy.app" "DroidProxy-notarize.zip"
+          ditto -c -k --sequesterRsrc --keepParent "DroidProxyPlus.app" "DroidProxyPlus-notarize.zip"
 
-          SUBMIT_OUTPUT=$(xcrun notarytool submit "DroidProxy-notarize.zip" \
+          SUBMIT_OUTPUT=$(xcrun notarytool submit "DroidProxyPlus-notarize.zip" \
             --apple-id "${{ secrets.APPLE_ID }}" \
             --team-id "${{ secrets.APPLE_TEAM_ID }}" \
             --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" \
@@ -148,15 +148,15 @@ jobs:
             exit 1
           fi
 
-          xcrun stapler staple "DroidProxy.app"
-          xcrun stapler validate "DroidProxy.app"
-          rm "DroidProxy-notarize.zip"
+          xcrun stapler staple "DroidProxyPlus.app"
+          xcrun stapler validate "DroidProxyPlus.app"
+          rm "DroidProxyPlus-notarize.zip"
 
       - name: Create ZIP
-        run: ditto -c -k --sequesterRsrc --keepParent "DroidProxy.app" "DroidProxy-arm64.zip"
+        run: ditto -c -k --sequesterRsrc --keepParent "DroidProxyPlus.app" "DroidProxyPlus-arm64.zip"
 
       - name: Calculate checksum
-        run: shasum -a 256 "DroidProxy-arm64.zip" | tee "DroidProxy-arm64.zip.sha256"
+        run: shasum -a 256 "DroidProxyPlus-arm64.zip" | tee "DroidProxyPlus-arm64.zip.sha256"
 
       - name: Sparkle sign
         id: sparkle
@@ -172,9 +172,9 @@ jobs:
             exit 1
           fi
 
-          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | "$SIGN_UPDATE" "DroidProxy-arm64.zip" --ed-key-file -)
+          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | "$SIGN_UPDATE" "DroidProxyPlus-arm64.zip" --ed-key-file -)
           ED_SIGNATURE=$(echo "$SIGNATURE" | grep -o 'sparkle:edSignature="[^"]*"' | sed 's/sparkle:edSignature="//;s/"$//')
-          LENGTH=$(stat -f%z "DroidProxy-arm64.zip")
+          LENGTH=$(stat -f%z "DroidProxyPlus-arm64.zip")
 
           echo "ed_signature=$ED_SIGNATURE" >> "$GITHUB_OUTPUT"
           echo "length=$LENGTH" >> "$GITHUB_OUTPUT"
@@ -196,7 +196,7 @@ jobs:
                 <sparkle:shortVersionString>${VERSION}</sparkle:shortVersionString>
                 <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
                 <pubDate>${TODAY}</pubDate>
-                <enclosure url="https://github.com/anand-92/droidproxy/releases/download/v${VERSION}/DroidProxy-arm64.zip"
+                <enclosure url="https://github.com/KilimcininKorOglu/droidproxyplus/releases/download/v${VERSION}/DroidProxyPlus-arm64.zip"
                            type="application/octet-stream"
                            sparkle:edSignature="${ED_SIGNATURE}"
                            length="${LENGTH}"/>
@@ -229,32 +229,32 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          name: DroidProxy ${{ steps.version.outputs.version }}
+          name: DroidProxyPlus ${{ steps.version.outputs.version }}
           files: |
-            DroidProxy-arm64.zip
-            DroidProxy-arm64.zip.sha256
+            DroidProxyPlus-arm64.zip
+            DroidProxyPlus-arm64.zip.sha256
           draft: false
           prerelease: false
           generate_release_notes: true
           body: |
-            ## DroidProxy ${{ steps.version.outputs.version }}
+            ## DroidProxyPlus ${{ steps.version.outputs.version }}
 
             ### Download
 
             | File | Description |
             |------|-------------|
-            | `DroidProxy-arm64.zip` | Apple Silicon (M1/M2/M3/M4) |
+            | `DroidProxyPlus-arm64.zip` | Apple Silicon (M1/M2/M3/M4) |
 
             ### Installation
 
-            1. Download `DroidProxy-arm64.zip`
-            2. Extract and drag `DroidProxy.app` to Applications
+            1. Download `DroidProxyPlus-arm64.zip`
+            2. Extract and drag `DroidProxyPlus.app` to Applications
             3. Double-click to launch
 
             Code signed with Apple Developer ID and notarized.
 
             ```bash
-            shasum -a 256 -c DroidProxy-arm64.zip.sha256
+            shasum -a 256 -c DroidProxyPlus-arm64.zip.sha256
             ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

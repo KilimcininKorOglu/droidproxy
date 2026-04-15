@@ -122,7 +122,7 @@ export default function Features() {
             <div className="w-full lg:w-80">
               <img
                 src="/settings-screenshot.png"
-                alt="DroidProxy Settings"
+                alt="DroidProxyPlus Settings"
                 className="rounded-xl shadow-lg"
               />
             </div>

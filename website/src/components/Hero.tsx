@@ -10,7 +10,7 @@ export default function Hero() {
             </div>
             
             <h1 className="text-5xl lg:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-r from-apple-gray-800 dark:from-white to-apple-gray-500 dark:to-apple-gray-400 bg-clip-text text-transparent">
-              DroidProxy
+              DroidProxyPlus
             </h1>
             
             <p className="text-xl lg:text-2xl text-apple-gray-500 dark:text-apple-gray-400 mb-4 leading-relaxed">
@@ -29,7 +29,7 @@ export default function Hero() {
                 Get Started
               </a>
               <a
-                href="https://github.com/anand-92/droidproxy"
+                href="https://github.com/KilimcininKorOglu/droidproxyplus"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-8 py-3 bg-apple-gray-100 dark:bg-apple-gray-700 text-apple-gray-800 dark:text-apple-gray-100 rounded-lg font-medium hover:bg-apple-gray-200 dark:hover:bg-apple-gray-600 transition-colors flex items-center justify-center gap-2"
@@ -62,7 +62,7 @@ export default function Hero() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-3xl opacity-20 dark:opacity-30"></div>
               <img
                 src="/logo.png"
-                alt="DroidProxy"
+                alt="DroidProxyPlus"
                 className="relative w-64 h-64 lg:w-80 lg:h-80 object-contain"
               />
             </div>

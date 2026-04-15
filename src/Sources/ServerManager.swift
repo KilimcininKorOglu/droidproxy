@@ -62,7 +62,7 @@ class ServerManager: ObservableObject {
     }
     private var logBuffer: RingBuffer<String>
     private let maxLogLines = 1000
-    private let processQueue = DispatchQueue(label: "io.automaze.droidproxy.server-process", qos: .userInitiated)
+    private let processQueue = DispatchQueue(label: "io.automaze.droidproxyplus.server-process", qos: .userInitiated)
     
     private enum Timing {
         static let readinessCheckDelay: TimeInterval = 1.0
@@ -411,7 +411,7 @@ class ServerManager: ObservableObject {
         if !disabledProviders.isEmpty {
             configContent += """
 
-# Provider exclusions (auto-added by DroidProxy)
+# Provider exclusions (auto-added by DroidProxyPlus)
 oauth-excluded-models:
 
 """

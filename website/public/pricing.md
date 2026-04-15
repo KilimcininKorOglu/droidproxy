@@ -1,4 +1,4 @@
-# DroidProxy - Pricing
+# DroidProxyPlus - Pricing
 
 ## Free
 - **Price**: $0 / forever
@@ -12,11 +12,11 @@
   - Apple Silicon optimized
 
 ## Notes
-- DroidProxy is free and open source under the MIT License
+- DroidProxyPlus is free and open source under the MIT License
 - No registration required
 - No API keys needed for personal use
-- Download from: https://github.com/anand-92/droidproxy/releases
+- Download from: https://github.com/KilimcininKorOglu/droidproxyplus/releases
 
 ## Contact
-- GitHub Issues: https://github.com/anand-92/droidproxy/issues
-- Source Code: https://github.com/anand-92/droidproxy
+- GitHub Issues: https://github.com/KilimcininKorOglu/droidproxyplus/issues
+- Source Code: https://github.com/KilimcininKorOglu/droidproxyplus

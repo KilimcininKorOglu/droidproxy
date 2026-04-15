@@ -827,7 +827,7 @@ struct SettingsView: View {
             // Footer
             VStack(spacing: 4) {
                 HStack(spacing: 4) {
-                    Text("DroidProxy \(appVersion) was made possible thanks to")
+                    Text("DroidProxyPlus \(appVersion) was made possible thanks to")
                         .font(.caption)
                         .foregroundColor(oledFooterText)
                     Link("CLIProxyAPIPlus", destination: URL(string: "https://github.com/router-for-me/CLIProxyAPIPlus")!)
@@ -849,12 +849,12 @@ struct SettingsView: View {
                     Text("© 2026")
                         .font(.caption)
                         .foregroundColor(oledFooterText)
-                    Text("DroidProxy")
+                    Text("DroidProxyPlus")
                         .font(.caption)
                         .foregroundColor(oledFooterText)
                 }
 
-                Link("Report an issue", destination: URL(string: "https://github.com/anand-92/droidproxy/issues")!)
+                Link("Report an issue", destination: URL(string: "https://github.com/KilimcininKorOglu/droidproxyplus/issues")!)
                     .font(.caption)
                     .foregroundColor(oledFooterText)
                     .padding(.top, 6)
@@ -985,7 +985,7 @@ struct SettingsView: View {
         case .codex:
             return "🌐 Browser opened for Codex authentication.\n\nPlease complete the login in your browser.\n\nThe app will automatically detect your credentials."
         case .gemini:
-            return "🌐 Browser opened for Gemini authentication.\n\nPlease complete the login in your browser.\n\nThe app will automatically detect your credentials.\n\nIf having issues, run in terminal:\n/Applications/DroidProxy.app/Contents/Resources/cli-proxy-api-plus --config ~/.cli-proxy-api/merged-config.yaml -login"
+            return "🌐 Browser opened for Gemini authentication.\n\nPlease complete the login in your browser.\n\nThe app will automatically detect your credentials.\n\nIf having issues, run in terminal:\n/Applications/DroidProxyPlus.app/Contents/Resources/cli-proxy-api-plus --config ~/.cli-proxy-api/merged-config.yaml -login"
         }
     }
     
@@ -1019,63 +1019,63 @@ struct SettingsView: View {
     
     // MARK: - Factory Custom Models
 
-    private static let droidProxyModels: [[String: Any]] = [
+    private static let droidProxyPlusModels: [[String: Any]] = [
         [
             "model": "claude-opus-4-6",
-            "id": "custom:droidproxy:opus-4-6",
+            "id": "custom:droidproxyplus:opus-4-6",
             "baseUrl": "http://localhost:8317",
             "apiKey": "dummy-not-used",
-            "displayName": "DroidProxy: Opus 4.6",
+            "displayName": "DroidProxyPlus: Opus 4.6",
             "maxOutputTokens": 128000,
             "noImageSupport": false,
             "provider": "anthropic"
         ],
         [
             "model": "claude-sonnet-4-6",
-            "id": "custom:droidproxy:sonnet-4-6",
+            "id": "custom:droidproxyplus:sonnet-4-6",
             "baseUrl": "http://localhost:8317",
             "apiKey": "dummy-not-used",
-            "displayName": "DroidProxy: Sonnet 4.6",
+            "displayName": "DroidProxyPlus: Sonnet 4.6",
             "maxOutputTokens": 64000,
             "noImageSupport": false,
             "provider": "anthropic"
         ],
         [
             "model": "gpt-5.3-codex",
-            "id": "custom:droidproxy:gpt-5.3-codex",
+            "id": "custom:droidproxyplus:gpt-5.3-codex",
             "baseUrl": "http://localhost:8317/v1",
             "apiKey": "dummy-not-used",
-            "displayName": "DroidProxy: GPT 5.3 Codex",
+            "displayName": "DroidProxyPlus: GPT 5.3 Codex",
             "maxOutputTokens": 128000,
             "noImageSupport": false,
             "provider": "openai"
         ],
         [
             "model": "gpt-5.4",
-            "id": "custom:droidproxy:gpt-5.4",
+            "id": "custom:droidproxyplus:gpt-5.4",
             "baseUrl": "http://localhost:8317/v1",
             "apiKey": "dummy-not-used",
-            "displayName": "DroidProxy: GPT 5.4",
+            "displayName": "DroidProxyPlus: GPT 5.4",
             "maxOutputTokens": 128000,
             "noImageSupport": false,
             "provider": "openai"
         ],
         [
             "model": "gemini-3.1-pro-preview",
-            "id": "custom:droidproxy:gemini-3.1-pro",
+            "id": "custom:droidproxyplus:gemini-3.1-pro",
             "baseUrl": "http://localhost:8317",
             "apiKey": "dummy-not-used",
-            "displayName": "DroidProxy: Gemini 3.1 Pro",
+            "displayName": "DroidProxyPlus: Gemini 3.1 Pro",
             "maxOutputTokens": 65536,
             "noImageSupport": false,
             "provider": "google"
         ],
         [
             "model": "gemini-3-flash-preview",
-            "id": "custom:droidproxy:gemini-3-flash",
+            "id": "custom:droidproxyplus:gemini-3-flash",
             "baseUrl": "http://localhost:8317",
             "apiKey": "dummy-not-used",
-            "displayName": "DroidProxy: Gemini 3 Flash",
+            "displayName": "DroidProxyPlus: Gemini 3 Flash",
             "maxOutputTokens": 65536,
             "noImageSupport": false,
             "provider": "google"
@@ -1104,7 +1104,7 @@ struct SettingsView: View {
             return false
         }
         let existingIds = Set(models.compactMap { $0["id"] as? String })
-        let enabledModels = Self.droidProxyModels.filter { model in
+        let enabledModels = Self.droidProxyPlusModels.filter { model in
             guard let key = providerKey(for: model) else { return true }
             return serverManager.isProviderEnabled(key)
         }
@@ -1126,13 +1126,13 @@ struct SettingsView: View {
 
         var models = (settings["customModels"] as? [[String: Any]]) ?? []
 
-        let droidIds = Set(Self.droidProxyModels.compactMap { $0["id"] as? String })
+        let droidIds = Set(Self.droidProxyPlusModels.compactMap { $0["id"] as? String })
         models.removeAll { item in
             guard let id = item["id"] as? String else { return false }
             return droidIds.contains(id) || id.hasPrefix("custom:CC:")
         }
 
-        let enabledModels = Self.droidProxyModels.filter { model in
+        let enabledModels = Self.droidProxyPlusModels.filter { model in
             guard let key = providerKey(for: model) else { return true }
             return serverManager.isProviderEnabled(key)
         }
@@ -1153,7 +1153,7 @@ struct SettingsView: View {
             try data.write(to: url, options: .atomic)
             factoryModelsInstalled = true
             authResultSuccess = true
-            authResultMessage = "DroidProxy models added to Factory settings.\n\nRestart Factory (or open a new session) to see them in the model picker."
+            authResultMessage = "DroidProxyPlus models added to Factory settings.\n\nRestart Factory (or open a new session) to see them in the model picker."
             showingAuthResult = true
             NSLog("[SettingsView] Factory custom models applied to %@", url.path)
         } catch {
@@ -1171,7 +1171,7 @@ struct SettingsView: View {
         ---
         name: challenger-opus
         description: Devil's advocate code reviewer that challenges decisions, critiques patterns, and suggests better alternatives. Use when you want a tough second opinion on code, architecture, or design choices.
-        model: custom:droidproxy:opus-4-6
+        model: custom:droidproxyplus:opus-4-6
         tools: ["Read", "LS", "Grep", "Glob", "WebSearch", "FetchUrl"]
         ---
 
@@ -1206,7 +1206,7 @@ struct SettingsView: View {
         ---
         name: challenger-gpt
         description: Devil's advocate code reviewer that challenges decisions, critiques patterns, and suggests better alternatives. Use when you want a tough second opinion on code, architecture, or design choices.
-        model: custom:droidproxy:gpt-5.4
+        model: custom:droidproxyplus:gpt-5.4
         tools: ["Read", "LS", "Grep", "Glob", "WebSearch", "FetchUrl"]
         ---
 
@@ -1241,7 +1241,7 @@ struct SettingsView: View {
         ---
         name: challenger-gemini
         description: Devil's advocate code reviewer that challenges decisions, critiques patterns, and suggests better alternatives. Use when you want a tough second opinion on code, architecture, or design choices.
-        model: custom:droidproxy:gemini-3.1-pro
+        model: custom:droidproxyplus:gemini-3.1-pro
         tools: ["Read", "LS", "Grep", "Glob", "WebSearch", "FetchUrl"]
         ---
 

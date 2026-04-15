@@ -1,8 +1,8 @@
-# DroidProxy
+# DroidProxyPlus
 
-DroidProxy is a free, open-source macOS menu bar application that proxies authentication for AI coding tools including Claude Code, Codex, and Gemini.
+DroidProxyPlus is a free, open-source macOS menu bar application that proxies authentication for AI coding tools including Claude Code, Codex, and Gemini.
 
-## What DroidProxy Does
+## What DroidProxyPlus Does
 
 - One-click OAuth authentication for AI coding tools
 - Routes requests through localhost proxy (port 8317)
@@ -35,6 +35,6 @@ DroidProxy is a free, open-source macOS menu bar application that proxies authen
 ## Links
 
 - Homepage: /
-- GitHub: https://github.com/anand-92/droidproxy
-- Releases: https://github.com/anand-92/droidproxy/releases
-- Issues: https://github.com/anand-92/droidproxy/issues
+- GitHub: https://github.com/KilimcininKorOglu/droidproxyplus
+- Releases: https://github.com/KilimcininKorOglu/droidproxyplus/releases
+- Issues: https://github.com/KilimcininKorOglu/droidproxyplus/issues

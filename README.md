@@ -1,17 +1,17 @@
-# DroidProxy
+# DroidProxyPlus
 
 <p align="center">
-  <img src="logo.png" alt="DroidProxy" width="128">
+  <img src="logo.png" alt="DroidProxyPlus" width="128">
 </p>
 
 A native macOS menu bar app that proxies Claude Code, Codex, and Gemini authentication for use with AI coding tools like [<img src="factory-logo.svg" alt="Factory.ai" height="16">](https://app.factory.ai) Droids. Built on [CLIProxyAPIPlus](https://github.com/router-for-me/CLIProxyAPIPlus).
 
 ## Download
 
-Grab the latest release from [Releases](https://github.com/anand-92/droidproxy/releases/latest):
+Grab the latest release from [Releases](https://github.com/KilimcininKorOglu/droidproxyplus/releases/latest):
 
-- **DroidProxy-arm64.dmg** -- Apple Silicon
-- **DroidProxy-arm64.zip** -- ZIP alternative
+- **DroidProxyPlus-arm64.dmg** -- Apple Silicon
+- **DroidProxyPlus-arm64.zip** -- ZIP alternative
 
 All releases are code-signed and notarized by Apple. Existing installs auto-update via Sparkle.
 
@@ -36,7 +36,7 @@ All releases are code-signed and notarized by Apple. Existing installs auto-upda
 See [SETUP.md](SETUP.md) for authentication and Factory configuration instructions.
 
 <p align="center">
-  <img src="settings-screenshot.png" alt="DroidProxy Settings" width="420">
+  <img src="settings-screenshot.png" alt="DroidProxyPlus Settings" width="420">
 </p>
 
 ## Requirements
@@ -83,7 +83,7 @@ src/
 
 ## Challenger Droids
 
-DroidProxy ships with three devil's advocate code reviewer droids -- powered by Claude Opus 4.6, GPT 5.4, and Gemini 3.1 Pro. They challenge your code decisions, surface tradeoffs you may have missed, stress-test edge cases, and suggest concrete alternatives. Running multiple gives you a cross-model second opinion that catches blind spots a single reviewer might miss.
+DroidProxyPlus ships with three devil's advocate code reviewer droids -- powered by Claude Opus 4.6, GPT 5.4, and Gemini 3.1 Pro. They challenge your code decisions, surface tradeoffs you may have missed, stress-test edge cases, and suggest concrete alternatives. Running multiple gives you a cross-model second opinion that catches blind spots a single reviewer might miss.
 
 ### Install
 
@@ -115,10 +115,10 @@ Both droids are read-only (no file edits) and return a structured verdict with c
 
 ## Star History
 
-<a href="https://starchart.cc/anand-92/droidproxy">
+<a href="https://starchart.cc/KilimcininKorOglu/droidproxyplus">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://starchart.cc/anand-92/droidproxy.svg?theme=dark">
-    <img alt="Star History Chart" src="https://starchart.cc/anand-92/droidproxy.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://starchart.cc/KilimcininKorOglu/droidproxyplus.svg?theme=dark">
+    <img alt="Star History Chart" src="https://starchart.cc/KilimcininKorOglu/droidproxyplus.svg">
   </picture>
 </a>
 

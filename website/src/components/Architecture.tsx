@@ -5,7 +5,7 @@ export default function Architecture() {
         <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4">How It Works</h2>
           <p className="text-apple-gray-500 dark:text-apple-gray-400 max-w-2xl mx-auto">
-            DroidProxy sits between your AI coding tools and upstream providers, handling authentication and intelligent request routing.
+            DroidProxyPlus sits between your AI coding tools and upstream providers, handling authentication and intelligent request routing.
           </p>
         </div>
 

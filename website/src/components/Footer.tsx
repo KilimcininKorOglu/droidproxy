@@ -4,16 +4,16 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="DroidProxy" className="w-8 h-8" />
+            <img src="/logo.png" alt="DroidProxyPlus" className="w-8 h-8" />
             <div>
-              <div className="font-semibold">DroidProxy</div>
+              <div className="font-semibold">DroidProxyPlus</div>
               <div className="text-xs text-apple-gray-400 dark:text-apple-gray-500">Open Source MIT License</div>
             </div>
           </div>
 
           <div className="flex items-center gap-6">
             <a
-              href="https://github.com/anand-92/droidproxy"
+              href="https://github.com/KilimcininKorOglu/droidproxyplus"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-apple-gray-500 dark:text-apple-gray-400 hover:text-apple-gray-800 dark:hover:text-apple-gray-50 transition-colors"
@@ -24,7 +24,7 @@ export default function Footer() {
               GitHub
             </a>
             <a
-              href="https://github.com/anand-92/droidproxy/issues"
+              href="https://github.com/KilimcininKorOglu/droidproxyplus/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-apple-gray-500 dark:text-apple-gray-400 hover:text-apple-gray-800 dark:hover:text-apple-gray-50 transition-colors"
@@ -32,7 +32,7 @@ export default function Footer() {
               Issues
             </a>
             <a
-              href="https://github.com/anand-92/droidproxy/blob/main/LICENSE"
+              href="https://github.com/KilimcininKorOglu/droidproxyplus/blob/main/LICENSE"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-apple-gray-500 dark:text-apple-gray-400 hover:text-apple-gray-800 dark:hover:text-apple-gray-50 transition-colors"

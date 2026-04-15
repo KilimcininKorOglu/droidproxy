@@ -22,4 +22,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://droidproxy.app/sitemap.xml
+Sitemap: https://droidproxyplus.app/sitemap.xml

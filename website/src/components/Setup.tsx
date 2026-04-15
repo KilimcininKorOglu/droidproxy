@@ -22,7 +22,7 @@ export default function Setup() {
                       Grab the DMG from the GitHub releases page.
                     </p>
                     <a
-                      href="https://github.com/anand-92/droidproxy/releases"
+                      href="https://github.com/KilimcininKorOglu/droidproxyplus/releases"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors"
@@ -42,7 +42,7 @@ export default function Setup() {
                   <div>
                     <h4 className="font-medium mb-2">Open Menu Bar Settings</h4>
                     <p className="text-sm text-apple-gray-500 dark:text-apple-gray-400 mb-3">
-                      Click the DroidProxy icon in your menu bar and open Settings.
+                      Click the DroidProxyPlus icon in your menu bar and open Settings.
                     </p>
                   </div>
                 </div>
@@ -78,67 +78,67 @@ export default function Setup() {
             <h3 className="text-xl font-semibold mb-6">Factory Custom Models Reference</h3>
             <div className="p-6 rounded-2xl bg-apple-gray-50 dark:bg-apple-gray-800/50 border border-apple-gray-200 dark:border-apple-gray-700">
               <p className="text-sm text-apple-gray-500 dark:text-apple-gray-400 mb-4">
-                When you click Apply, DroidProxy registers these pre-configured custom models with your AI client, routing all requests through the local proxy at <code className="px-1.5 py-0.5 rounded bg-apple-gray-200 dark:bg-apple-gray-700 text-xs">localhost:8317</code>.
+                When you click Apply, DroidProxyPlus registers these pre-configured custom models with your AI client, routing all requests through the local proxy at <code className="px-1.5 py-0.5 rounded bg-apple-gray-200 dark:bg-apple-gray-700 text-xs">localhost:8317</code>.
               </p>
               <div className="p-4 rounded-lg bg-apple-gray-100 dark:bg-apple-gray-900 code-block overflow-x-auto">
                 <pre className="text-xs leading-relaxed">{`"customModels": [
   {
     "model": "claude-opus-4-6",
-    "id": "custom:droidproxy:opus-4-6",
+    "id": "custom:droidproxyplus:opus-4-6",
     "index": 0,
     "baseUrl": "http://localhost:8317",
     "apiKey": "***",
-    "displayName": "DroidProxy: Opus 4.6",
+    "displayName": "DroidProxyPlus: Opus 4.6",
     "maxOutputTokens": 128000,
     "provider": "anthropic"
   },
   {
     "model": "claude-sonnet-4-6",
-    "id": "custom:droidproxy:sonnet-4-6",
+    "id": "custom:droidproxyplus:sonnet-4-6",
     "index": 1,
     "baseUrl": "http://localhost:8317",
     "apiKey": "***",
-    "displayName": "DroidProxy: Sonnet 4.6",
+    "displayName": "DroidProxyPlus: Sonnet 4.6",
     "maxOutputTokens": 64000,
     "provider": "anthropic"
   },
   {
     "model": "gpt-5.3-codex",
-    "id": "custom:droidproxy:gpt-5.3-codex",
+    "id": "custom:droidproxyplus:gpt-5.3-codex",
     "index": 2,
     "baseUrl": "http://localhost:8317/v1",
     "apiKey": "***",
-    "displayName": "DroidProxy: GPT 5.3 Codex",
+    "displayName": "DroidProxyPlus: GPT 5.3 Codex",
     "maxOutputTokens": 128000,
     "provider": "openai"
   },
   {
     "model": "gpt-5.4",
-    "id": "custom:droidproxy:gpt-5.4",
+    "id": "custom:droidproxyplus:gpt-5.4",
     "index": 3,
     "baseUrl": "http://localhost:8317/v1",
     "apiKey": "***",
-    "displayName": "DroidProxy: GPT 5.4",
+    "displayName": "DroidProxyPlus: GPT 5.4",
     "maxOutputTokens": 128000,
     "provider": "openai"
   },
   {
     "model": "gemini-3.1-pro-preview",
-    "id": "custom:droidproxy:gemini-3.1-pro",
+    "id": "custom:droidproxyplus:gemini-3.1-pro",
     "index": 4,
     "baseUrl": "http://localhost:8317/v1",
     "apiKey": "***",
-    "displayName": "DroidProxy: Gemini 3.1 Pro",
+    "displayName": "DroidProxyPlus: Gemini 3.1 Pro",
     "maxOutputTokens": 65536,
     "provider": "openai"
   },
   {
     "model": "gemini-3-flash-preview",
-    "id": "custom:droidproxy:gemini-3-flash",
+    "id": "custom:droidproxyplus:gemini-3-flash",
     "index": 5,
     "baseUrl": "http://localhost:8317/v1",
     "apiKey": "***",
-    "displayName": "DroidProxy: Gemini 3 Flash",
+    "displayName": "DroidProxyPlus: Gemini 3 Flash",
     "maxOutputTokens": 65536,
     "provider": "openai"
   }

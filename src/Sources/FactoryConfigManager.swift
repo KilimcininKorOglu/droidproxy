@@ -200,8 +200,8 @@ class FactoryConfigManager: ObservableObject {
         saveModels()
     }
 
-    func isDroidProxyModel(_ entry: CustomModelEntry) -> Bool {
-        entry.id.hasPrefix("custom:droidproxy:") || entry.id.hasPrefix("custom:CC:")
+    func isDroidProxyPlusModel(_ entry: CustomModelEntry) -> Bool {
+        entry.id.hasPrefix("custom:droidproxyplus:") || entry.id.hasPrefix("custom:CC:")
     }
 
     // MARK: - File Monitoring

@@ -109,9 +109,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
         // App menu
         let appMenuItem = NSMenuItem()
         let appMenu = NSMenu()
-        appMenu.addItem(NSMenuItem(title: "About DroidProxy", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: ""))
+        appMenu.addItem(NSMenuItem(title: "About DroidProxyPlus", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: ""))
         appMenu.addItem(NSMenuItem.separator())
-        appMenu.addItem(NSMenuItem(title: "Quit DroidProxy", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        appMenu.addItem(NSMenuItem(title: "Quit DroidProxyPlus", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         appMenuItem.submenu = appMenu
         mainMenu.addItem(appMenuItem)
         
@@ -138,7 +138,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
             if let icon = IconCatalog.shared.image(named: "icon-inactive.png", resizedTo: NSSize(width: 18, height: 18), template: true) {
                 button.image = icon
             } else {
-                let fallback = NSImage(systemSymbolName: "network.slash", accessibilityDescription: "DroidProxy")
+                let fallback = NSImage(systemSymbolName: "network.slash", accessibilityDescription: "DroidProxyPlus")
                 fallback?.isTemplate = true
                 button.image = fallback
                 NSLog("[MenuBar] Failed to load inactive icon from bundle; using fallback system icon")
@@ -206,7 +206,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
             backing: .buffered,
             defer: false
         )
-        window.title = "DroidProxy"
+        window.title = "DroidProxyPlus"
         window.center()
         window.delegate = self
         window.isReleasedWhenClosed = false
@@ -279,7 +279,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
                     if success {
                         self?.updateMenuBarStatus()
                         // User always connects to 8317 (thinking proxy)
-                        self?.showNotification(title: "Server Started", body: "DroidProxy is now running")
+                        self?.showNotification(title: "Server Started", body: "DroidProxyPlus is now running")
                     } else {
                         // Backend failed - stop the proxy to keep state consistent
                         self?.thinkingProxy.stop()
@@ -382,7 +382,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, UNUserNoti
         content.sound = .default
         
         let request = UNNotificationRequest(
-            identifier: "io.automaze.droidproxy.\(UUID().uuidString)",
+            identifier: "io.automaze.droidproxyplus.\(UUID().uuidString)",
             content: content,
             trigger: nil
         )

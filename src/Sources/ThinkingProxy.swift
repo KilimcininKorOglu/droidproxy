@@ -24,11 +24,11 @@ class ThinkingProxy {
     private let targetPort: UInt16 = 8318
     private let targetHost = "127.0.0.1"
     private(set) var isRunning = false
-    private let stateQueue = DispatchQueue(label: "io.automaze.droidproxy.thinking-proxy-state")
+    private let stateQueue = DispatchQueue(label: "io.automaze.droidproxyplus.thinking-proxy-state")
 
     /// File-based debug logger (writes to /tmp/droidproxy-debug.log)
-    private static let logFile: URL = URL(fileURLWithPath: "/tmp/droidproxy-debug.log")
-    private static let logQueue = DispatchQueue(label: "io.automaze.droidproxy.file-log")
+    private static let logFile: URL = URL(fileURLWithPath: "/tmp/droidproxyplus-debug.log")
+    private static let logQueue = DispatchQueue(label: "io.automaze.droidproxyplus.file-log")
     static func fileLog(_ message: String) {
         let timestamp = ISO8601DateFormatter().string(from: Date())
         let line = "[\(timestamp)] \(message)\n"

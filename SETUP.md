@@ -1,8 +1,8 @@
-# DroidProxy Setup
+# DroidProxyPlus Setup
 
 ## 1. Launch & Authenticate
 
-1. Open DroidProxy from your Applications folder
+1. Open DroidProxyPlus from your Applications folder
 2. Click the menu bar icon and select "Open Settings"
 3. Click "Connect" next to Claude Code, Codex, or Gemini and complete the OAuth flow in your browser
 
@@ -14,66 +14,66 @@ Open `~/.factory/settings.json` and add the following to the `customModels` arra
 "customModels": [
     {
       "model": "claude-opus-4-6",
-      "id": "custom:droidproxy:opus-4-6",
+      "id": "custom:droidproxyplus:opus-4-6",
       "index": 0,
       "baseUrl": "http://localhost:8317",
       "apiKey": "dummy-not-used",
-      "displayName": "DroidProxy: Opus 4.6",
+      "displayName": "DroidProxyPlus: Opus 4.6",
       "maxOutputTokens": 128000,
       "noImageSupport": false,
       "provider": "anthropic"
     },
     {
       "model": "claude-sonnet-4-6",
-      "id": "custom:droidproxy:sonnet-4-6",
+      "id": "custom:droidproxyplus:sonnet-4-6",
       "index": 1,
       "baseUrl": "http://localhost:8317",
       "apiKey": "dummy-not-used",
-      "displayName": "DroidProxy: Sonnet 4.6",
+      "displayName": "DroidProxyPlus: Sonnet 4.6",
       "maxOutputTokens": 64000,
       "noImageSupport": false,
       "provider": "anthropic"
     },
     {
       "model": "gpt-5.3-codex",
-      "id": "custom:droidproxy:gpt-5.3-codex",
+      "id": "custom:droidproxyplus:gpt-5.3-codex",
       "index": 2,
       "baseUrl": "http://localhost:8317/v1",
       "apiKey": "dummy-not-used",
-      "displayName": "DroidProxy: GPT 5.3 Codex",
+      "displayName": "DroidProxyPlus: GPT 5.3 Codex",
       "maxOutputTokens": 128000,
       "noImageSupport": false,
       "provider": "openai"
     },
     {
       "model": "gpt-5.4",
-      "id": "custom:droidproxy:gpt-5.4",
+      "id": "custom:droidproxyplus:gpt-5.4",
       "index": 3,
       "baseUrl": "http://localhost:8317/v1",
       "apiKey": "dummy-not-used",
-      "displayName": "DroidProxy: GPT 5.4",
+      "displayName": "DroidProxyPlus: GPT 5.4",
       "maxOutputTokens": 128000,
       "noImageSupport": false,
       "provider": "openai"
     },
     {
       "model": "gemini-3.1-pro-preview",
-      "id": "custom:droidproxy:gemini-3.1-pro",
+      "id": "custom:droidproxyplus:gemini-3.1-pro",
       "index": 4,
       "baseUrl": "http://localhost:8317",
       "apiKey": "dummy-not-used",
-      "displayName": "DroidProxy: Gemini 3.1 Pro",
+      "displayName": "DroidProxyPlus: Gemini 3.1 Pro",
       "maxOutputTokens": 65536,
       "noImageSupport": false,
       "provider": "google"
     },
     {
       "model": "gemini-3-flash-preview",
-      "id": "custom:droidproxy:gemini-3-flash",
+      "id": "custom:droidproxyplus:gemini-3-flash",
       "index": 5,
       "baseUrl": "http://localhost:8317",
       "apiKey": "dummy-not-used",
-      "displayName": "DroidProxy: Gemini 3 Flash",
+      "displayName": "DroidProxyPlus: Gemini 3 Flash",
       "maxOutputTokens": 65536,
       "noImageSupport": false,
       "provider": "google"
@@ -81,11 +81,11 @@ Open `~/.factory/settings.json` and add the following to the `customModels` arra
 ]
 ```
 
-Use the standard Claude and Codex model aliases in the `model` field. Claude entries use `provider: "anthropic"` with `http://localhost:8317`; GPT/Codex and Gemini entries use `provider: "openai"` with `http://localhost:8317/v1`. DroidProxy applies Claude adaptive thinking, Codex reasoning effort, and Gemini thinking levels based on the selected model and the effort/level setting in DroidProxy itself.
+Use the standard Claude and Codex model aliases in the `model` field. Claude entries use `provider: "anthropic"` with `http://localhost:8317`; GPT/Codex and Gemini entries use `provider: "openai"` with `http://localhost:8317/v1`. DroidProxyPlus applies Claude adaptive thinking, Codex reasoning effort, and Gemini thinking levels based on the selected model and the effort/level setting in DroidProxyPlus itself.
 
 ## 3. Configure Thinking Effort
 
-1. Open DroidProxy Settings
+1. Open DroidProxyPlus Settings
 2. Set the desired effort:
    - Opus 4.6: `low`, `medium`, `high`, or `max`
    - Sonnet 4.6: `low`, `medium`, or `high`
